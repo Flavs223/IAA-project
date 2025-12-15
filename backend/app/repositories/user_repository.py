@@ -1,3 +1,16 @@
+#Este repositorio me permite acceder a la tabla de usuarios en la base de datos
+# Y realizar las operaciones necesarias en SQL para obtener los datos requeridos o modificarlos
+# según sea el caso.
+
+"""Puedo realizar operaciones como:
+      - Obtener todos los usuarios
+      - Obtener un usuario por su id
+      - Verificar si un usuario es admin
+      - Hacer login de un usuario
+      - Crear un nuevo usuario
+      - Actualizar datos de un usuario
+      - Eliminar un usuario"""
+
 #Mando a llamar la función get_db_connection del módulo database.py
 from backend.app.core.database import get_db_connection
 

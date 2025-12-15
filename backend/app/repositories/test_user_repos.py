@@ -1,4 +1,7 @@
-from backend.app.repositories.repos_user import UsuariosService
+"""Este archivo es para probar las funciones del repositorio de usuarios.
+Aquí puedo llamar a las funciones definidas en user_repository.py
+y verificar que estén funcionando correctamente, e  impimir los resultados."""
+from backend.app.repositories.user_repository import UsuariosService
 
 usuarios = UsuariosService.get_all()
 
