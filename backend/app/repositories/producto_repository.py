@@ -73,3 +73,39 @@ class SkuMaestroRepository:
             finally:
                   cursor.close()
                   conn.close()
+      
+      
+      @staticmethod
+      def update(id_sku, codigo_sku, nombre_producto, categoria, unidad_medida, estado):
+            query = """
+            UPDATE sku_maestro
+            SET codigo_sku = %s,
+                  nombre_producto = %s,
+                  categoria = %s,
+                  unidad_medida = %s,
+                  estado = %s
+            WHERE id_sku = %s
+            """
+
+            conn = get_db_connection()
+            if not conn:
+                  return False
+
+            try:
+                  cursor = conn.cursor()
+                  cursor.execute(
+                  query,
+                  (
+                        codigo_sku,
+                        nombre_producto,
+                        categoria,
+                        unidad_medida,
+                        estado,
+                        id_sku
+                  )
+                  )
+                  conn.commit()
+                  return cursor.rowcount > 0
+            finally:
+                  cursor.close()
+                  conn.close()
