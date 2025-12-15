@@ -1,4 +1,4 @@
-# backend/app/repositories/test_producto_repo.py
+# backend/app/repositories/test_producto_repos.py
 """Este archivo es para probar las funciones del repositorio de productos.
 (Tabla en SQL: sku_maestro)"""
 
@@ -50,9 +50,36 @@ def test_create_sku():
       else:
             print("Error al crear SKU")
 
+#Protipo de función para actualizar un producto buscandolo por su id
+#De momento te permite que actualices todos los campos de los productos
+# Posteriormente se podrá mejorar solo cierto campo que se desee actualizar, no todos.
+def test_update_sku():
+      id_sku = int(input("ID del SKU a actualizar: "))
+      codigo = input("Nuevo código SKU: ")
+      nombre = input("Nuevo nombre del producto: ")
+      categoria = input("Nueva categoría: ")
+      unidad = input("Nueva unidad de medida: ")
+      estado = input("Estado (activo / inactivo): ")
+
+      actualizado = SkuMaestroRepository.update(
+            id_sku,
+            codigo,
+            nombre,
+            categoria,
+            unidad,
+            estado
+      )
+
+      if actualizado:
+            print("SKU actualizado correctamente")
+      else:
+            print("No se actualizó ningún SKU")
 
 
 if __name__ == "__main__":
       #test_get_all_productos()
       #test_get_producto_by_id()
-      test_create_sku()
+      #test_create_sku()
+      test_update_sku()
+      
+      
