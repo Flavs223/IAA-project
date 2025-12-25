@@ -6,7 +6,7 @@ from backend.app.repositories.producto_repository import SkuMaestroRepository
 
 
 # Prueba para obtener todos los productos
-"""def test_get_all_productos():
+def test_get_all_productos():
       print("Probando obtención de todos los productos...")
       productos = SkuMaestroRepository.get_all()
 
@@ -20,7 +20,8 @@ from backend.app.repositories.producto_repository import SkuMaestroRepository
 
 
 def test_get_producto_by_id():
-      producto_id = 100  # AJUSTA a un ID que exista en tu BD
+      producto_id= int(input("ID del SKU a buscar: "))
+      #producto_id = 100  # AJUSTA a un ID que exista en tu BD
       producto = SkuMaestroRepository.get_by_id(producto_id)
 
       if not producto:
@@ -29,7 +30,7 @@ def test_get_producto_by_id():
       else:
             print("Producto encontrado:")
             print(producto)
-"""
+
 ##Función para probar la creación de un nuevo producto
 def test_create_sku():
       #Crear función para crear un SKU en automático con los datos de la tabla. Usaré el SELECT eso es seguro para un norte
@@ -78,8 +79,8 @@ def test_update_sku():
 
 if __name__ == "__main__":
       #test_get_all_productos()
-      #test_get_producto_by_id()
+      test_get_producto_by_id()
       #test_create_sku()
-      test_update_sku()
+      #test_update_sku()
       
       
