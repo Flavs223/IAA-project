@@ -70,16 +70,16 @@ def test_update_sku():
             data["nombre_producto"] = input("Nuevo nombre del producto: ")
 
       if input("¿Cambiar categoria ID? (s/n): ").lower() == 's':
-            data["CATEGORIA_ID"] = int(input("Nueva categoria ID: "))
+            data["categoria_id"] = int(input("Nueva categoria ID: "))
 
       if input("¿Cambiar subcategoria ID? (s/n): ").lower() == 's':
-            data["SUBCATEGORIA_ID"] = int(input("Nueva subcategoria ID: "))
+            data["subcategoria_id"] = int(input("Nueva subcategoria ID: "))
 
       if input("¿Cambiar unidad de medida ID? (s/n): ").lower() == 's':
-            data["UNIDAD_MEDIDA_ID"] = int(input("Nueva unidad de medida ID: "))
+            data["unidad_medida_id"] = int(input("Nueva unidad de medida ID: "))
 
       if input("¿Cambiar marca ID? (s/n): ").lower() == 's':
-            data["MARCA_ID"] = int(input("Nueva marca ID: "))
+            data["marca_id"] = int(input("Nueva marca ID: "))
 
       if input("¿Cambiar estado? (s/n): ").lower() == 's':
             data["estado"] = input("Nuevo estado (activo / inactivo): ")

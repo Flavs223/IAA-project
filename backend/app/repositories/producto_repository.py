@@ -100,6 +100,7 @@ class SkuMaestroRepository:
       #Nueva función para actualizar un producto por su id
       @staticmethod
       def update(id_sku: int, data: dict) -> bool:
+            print("Campos recibidos para update:", list(data.keys()))
             """
             Actualiza un SKU existente en la tabla sku_maestro.
             Retorna True si se actualizó al menos un registro, False en caso contrario.
@@ -123,13 +124,16 @@ class SkuMaestroRepository:
             values = []
 
             for key, value in data.items():
+                  print("DATA RECIBIDA:", data)
                   if key not in allowed_fields:
+                        print(f"Campo ignorado por seguridad: {key}")
                         continue  # ignora campos no permitidos
 
                   fields.append(f"{allowed_fields[key]} = %s")
                   values.append(value)
 
             if not fields:
+                  print("No hubo campos válidos para actualizar:", data)
                   return False
 
             query = f"""
