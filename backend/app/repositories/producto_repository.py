@@ -3,8 +3,12 @@
     #Repositorio de acceso a datos para la tabla productos (sku_maestro en SQL, ya
     # que en esta se registran los datos de los artículos: nombre, marca, unidad de medida, estado, etc).
     # Encapsula todas las operaciones SQL relacionadas con productos.
-
 from backend.app.core.database import get_db_connection
+#Excepciónes de MySQL
+import mysql.connector
+from mysql.connector import IntegrityError, Error
+
+
 class SkuMaestroRepository:
 
       #Devuelve todos los productos en la base de datos
@@ -46,16 +50,27 @@ class SkuMaestroRepository:
                   conn.close()
 
       @staticmethod
-      def create(codigo_sku, nombre_producto, categoria, unidad_medida):
-            #OJO: Asegúrate de que los nombres de las columnas coincidan con los de tu tabla SQL
-            #OJO2: Esta función asume que la tabla tiene una columna autoincremental para el ID
-            #OJO3: Ajusta los parámetros según los campos reales de la tabla sku_maestro
-            #Los %s son placeholders para los valores que se insertarán, protegiendo contra inyecciones SQL
-            #Estos valores se pasan como una tupla, siempre serán %s para cada valor (int, str, bool, etc)
+      def create(
+            codigo_sku,
+            nombre_producto,
+            categoria_id,
+            subcategoria_id,
+            unidad_medida_id,
+            marca_id,
+            estado="activo"
+            ):
             query = """
             INSERT INTO sku_maestro
-            (codigo_sku, nombre_producto, categoria, unidad_medida)
-            VALUES (%s, %s, %s, %s)
+            (
+                  codigo_sku,
+                  nombre_producto,
+                  CATEGORIA_ID,
+                  SUBCATEGORIA_ID,
+                  UNIDAD_MEDIDA_ID,
+                  MARCA_ID,
+                  estado
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
             """
 
             conn = get_db_connection()
@@ -65,47 +80,85 @@ class SkuMaestroRepository:
             try:
                   cursor = conn.cursor()
                   cursor.execute(
-                  query,
-                  (codigo_sku, nombre_producto, categoria, unidad_medida)
+                        query,
+                        (
+                        codigo_sku,
+                        nombre_producto,
+                        categoria_id,
+                        subcategoria_id,
+                        unidad_medida_id,
+                        marca_id,
+                        estado
+                        )
                   )
                   conn.commit()
                   return cursor.lastrowid
             finally:
                   cursor.close()
                   conn.close()
-      
-      
+
+      #Nueva función para actualizar un producto por su id
       @staticmethod
-      def update(id_sku, codigo_sku, nombre_producto, categoria, unidad_medida, estado):
-            query = """
-            UPDATE sku_maestro
-            SET codigo_sku = %s,
-                  nombre_producto = %s,
-                  categoria = %s,
-                  unidad_medida = %s,
-                  estado = %s
-            WHERE id_sku = %s
+      def update(id_sku: int, data: dict) -> bool:
+            """
+            Actualiza un SKU existente en la tabla sku_maestro.
+            Retorna True si se actualizó al menos un registro, False en caso contrario.
             """
 
-            conn = get_db_connection()
-            if not conn:
+            if not data:
                   return False
 
+            # Lista blanca de campos permitidos
+            allowed_fields = {
+                  "codigo_sku": "CODIGO_SKU",
+                  "nombre_producto": "NOMBRE_PRODUCTO",
+                  "categoria_id": "CATEGORIA_ID",
+                  "subcategoria_id": "SUBCATEGORIA_ID",
+                  "unidad_medida_id": "UNIDAD_MEDIDA_ID",
+                  "marca_id": "MARCA_ID",
+                  "estado": "ESTADO",
+            }
+
+            fields = []
+            values = []
+
+            for key, value in data.items():
+                  if key not in allowed_fields:
+                        continue  # ignora campos no permitidos
+
+                  fields.append(f"{allowed_fields[key]} = %s")
+                  values.append(value)
+
+            if not fields:
+                  return False
+
+            query = f"""
+                  UPDATE sku_maestro
+                  SET {', '.join(fields)}
+                  WHERE id_sku = %s
+            """
+
+            values.append(id_sku)
+
             try:
-                  cursor = conn.cursor()
-                  cursor.execute(
-                  query,
-                  (
-                        codigo_sku,
-                        nombre_producto,
-                        categoria,
-                        unidad_medida,
-                        estado,
-                        id_sku
-                  )
-                  )
-                  conn.commit()
+                  connection = get_db_connection()
+                  cursor = connection.cursor()
+                  cursor.execute(query, tuple(values))
+                  connection.commit()
+
                   return cursor.rowcount > 0
+
+            except mysql.connector.IntegrityError as e:
+                  print(f"Error de integridad (FK): {e}")
+                  return False
+
+            except Exception as e:
+                  print(f"Error inesperado en update SKU: {e}")
+                  return False
+
             finally:
-                  cursor.close()
-                  conn.close()
+                  try:
+                        cursor.close()
+                        connection.close()
+                  except Exception:
+                        pass
